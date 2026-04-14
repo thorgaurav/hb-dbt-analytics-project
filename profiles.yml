@@ -1,7 +1,0 @@
-hubspotae_project:
-  target: dev
-  outputs:
-    dev:
-      type: duckdb
-      path: hubspot.duckdb
-      threads: 4
