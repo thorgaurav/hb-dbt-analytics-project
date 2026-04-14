@@ -1,15 +1,109 @@
-Welcome to your new dbt project!
+# Analytics Engineer dbt Project
 
-### Using the starter project
+## 📊 Overview
 
-Try running the following commands:
-- dbt run
-- dbt test
+This project models rental listing data to analyze marketplace performance, pricing trends, and availability constraints using dbt and DuckDB.
 
+The goal is to transform raw listing, calendar, and amenities data into a clean, analytics-ready data model that answers key business questions.
 
-### Resources:
-- Learn more about dbt [in the docs](https://docs.getdbt.com/docs/introduction)
-- Check out [Discourse](https://discourse.getdbt.com/) for commonly asked questions and answers
-- Join the [chat](https://community.getdbt.com/) on Slack for live discussions and support
-- Find [dbt events](https://events.getdbt.com) near you
-- Check out [the blog](https://blog.getdbt.com/) for the latest news on dbt's development and best practices
+---
+
+## 🧱 Data Model
+
+The project follows a layered dbt architecture:
+
+* **Staging**
+
+  * Cleans raw source data
+  * Handles nulls and deduplication
+  * Standardizes column names and types
+
+* **Intermediate**
+
+  * Enriches calendar data
+  * Implements **SCD Type 2** for amenities
+
+* **Mart**
+
+  * `fct_listing_day` (grain: listing × day)
+  * Derived marts for business analysis
+
+---
+
+## 🔑 Key Features
+
+* ✅ SCD Type 2 modeling (amenities history)
+* ✅ Incremental fact table (`fct_listing_day`)
+* ✅ Data quality tests using `dbt_utils` and `dbt_expectations`
+* ✅ Exposure for downstream dashboard
+* ✅ Business-ready marts
+* ✅ Advanced SQL (window functions, gaps & islands)
+
+---
+
+## 📈 Business Questions Answered
+
+### 1. Revenue by Air Conditioning
+
+* Calculated total revenue and % contribution by month
+* Segmented by listings with/without AC
+
+### 2. Neighborhood Pricing Trends
+
+* Measured average price increase per neighborhood
+* Based on point-in-time comparison
+
+### 3. Longest Possible Stay
+
+* Identified longest consecutive availability windows
+* Applied constraints using `maximum_nights`
+* Used gaps-and-islands technique
+
+---
+
+## ⚙️ Tech Stack
+
+* dbt
+* DuckDB
+* Python
+
+---
+
+## 🚀 How to Run
+
+```bash
+dbt deps
+dbt run
+dbt test
+dbt docs generate
+```
+
+---
+
+## 🧠 Key Design Decisions
+
+* **Listing-day grain** enables flexible analysis of availability and revenue
+* **SCD Type 2** used to track changing amenities over time
+* **Staging layer** handles data quality issues (nulls, duplicates)
+* **Marts** provide business-focused outputs on top of reusable fact table
+
+---
+
+## 📂 Project Structure
+
+```
+models/
+  staging/
+  intermediate/
+  marts/
+analyses/
+macros/
+snapshots/
+seeds/
+```
+
+---
+
+## 📌 Author
+
+Gaurav Thorat
