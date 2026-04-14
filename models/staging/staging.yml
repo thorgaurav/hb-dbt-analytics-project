@@ -1,0 +1,118 @@
+version: 2
+
+sources:
+  - name: hubspot_ae
+    schema: main_hubspot_ae
+
+    tables:
+      - name: LISTINGS
+        columns:
+          - name: ID
+            tests: [unique]
+
+      - name: CALENDAR
+        columns:
+          - name: LISTING_ID
+            tests: [not_null]
+
+          - name: DATE
+            tests: [not_null]
+
+          - name: MINIMUM_NIGHTS
+            tests: [not_null]
+
+          - name: MAXIMUM_NIGHTS
+            tests: [not_null]
+
+      - name: AMENITIES_CHANGELOG
+        tests:
+          - dbt_utils.unique_combination_of_columns:
+              combination_of_columns:
+                - LISTING_ID
+                - CHANGE_AT
+
+        columns:
+          - name: LISTING_ID
+            tests: [not_null]
+
+          - name: CHANGE_AT
+            tests: [not_null]
+
+models:
+  - name: stg_listings
+    description: "Cleaned listings data"
+
+    columns:
+      - name: listing_id
+        tests: [not_null, unique]
+
+      - name: amenities
+        description: "JSON array of amenities"
+
+      - name: price
+        description: 'Baseline listing price with currency symbol stripped.'
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+
+
+
+  - name: stg_calendar
+    description: "Daily listing availability and pricing"
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - listing_id
+            - calendar_date
+
+      - dbt_utils.expression_is_true:
+          expression: "minimum_nights<=maximum_nights"
+#      - dbt_expectations.expect_column_pair_values_A_to_be_less_than_B:
+#          column_A: minimum_nights
+#          column_B: maximum_nights
+
+    columns:
+      - name: listing_id
+        tests: [not_null]
+
+      - name: calendar_date
+        tests: [not_null]
+
+      - name: is_available
+        description: "Boolean availability flag"
+
+      - name: reservation_id
+        description: "Reservation ID if booked"
+
+      - name: price
+        description: "Nightly price"
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+
+      - name: minimum_nights
+        description: "Minimum nights allowed"
+
+      - name: maximum_nights
+        description: "Maximum nights allowed"
+
+
+  - name: stg_amenities_changelog
+    description: "Amenity change history"
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - listing_id
+            - change_at
+
+    columns:
+      - name: listing_id
+        tests: [not_null]
+
+      - name: change_at
+        tests: [not_null]
+
+      - name: amenities
+        description: "JSON array of amenities"

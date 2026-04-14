@@ -1,0 +1,46 @@
+version: 2
+
+models:
+  - name: fct_listing_day
+    description: "Daily fact table for listings with pricing, availability, revenue, and amenities"
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - listing_id
+            - calendar_date
+
+    columns:
+      - name: listing_id
+        tests: [not_null]
+
+      - name: calendar_date
+        tests: [not_null]
+
+      - name: price
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+
+      - name: revenue
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+
+      - name: is_available
+        tests:
+          - dbt_expectations.expect_column_values_to_be_in_set:
+              value_set: [true, false]
+
+      - name: is_booked
+        tests:
+          - dbt_expectations.expect_column_values_to_be_in_set:
+              value_set: [0, 1]
+
+      - name: has_ac
+        tests:
+          - dbt_expectations.expect_column_values_to_be_in_set:
+              value_set: [true, false]
+
+      - name: minimum_nights
+      - name: maximum_nights

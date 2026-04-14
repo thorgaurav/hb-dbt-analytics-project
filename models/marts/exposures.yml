@@ -1,0 +1,18 @@
+version: 2
+
+exposures:
+  - name: revenue_dashboard
+    type: dashboard
+    maturity: high
+    description: >
+      Executive revenue and occupancy dashboard. Consumes fct_listing_day
+      for period-over-period revenue analysis, occupancy rates, and
+      amenity segmentation.
+    depends_on:
+      - ref('fct_listing_day')
+      - ref('mart_revenue_monthly')
+      - ref('mart_ac_analysis')
+      - ref('mart_neighborhood')
+    owner:
+      name: Gaurav Thorat
+      email: gauravthorat@duck.com

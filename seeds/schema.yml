@@ -1,0 +1,48 @@
+version: 2
+
+seeds:
+  - name: AMENITIES_CHANGELOG
+    config:
+      path: "CSVs_new/AMENITIES_CHANGELOG.csv"
+      column_types:  # ← Add this line
+        LISTING_ID: varchar
+        DATE: varchar
+        AVAILABLE: varchar
+        RESERVATION_ID: varchar
+        PRICE: varchar
+        MINIMUM_NIGHTS: varchar
+        MAXIMUM_NIGHTS: varchar
+
+  - name: CALENDAR
+    config:
+      path: "CSVs_new/CALENDAR.csv"
+      column_types:
+        RESERVATION_ID: varchar
+        DATE: varchar
+        STATUS: varchar
+        RESERVATION_QUANTITY: varchar
+        PRICE: varchar
+        FEE: varchar
+        TOTAL_PRICE: varchar
+
+  - name: LISTINGS
+    config:
+      path: "CSVs_new/LISTINGS.csv"
+      column_types:
+        ID: varchar
+        NAME: varchar
+        HOST_ID: varchar
+        HOST_NAME: varchar
+        HOST_SINCE: varchar
+        NEIGHBOURHOOD: varchar
+        LISTING_TYPE: varchar
+        ROOM_TYPE: varchar
+        ACCOMMODATES: varchar
+        BATHROOMS: varchar
+        BEDROOMS: varchar
+        BEDS: varchar
+        AMENITIES: varchar
+        PRICE: varchar
+        MINIMUM_NIGHTS: varchar
+        MAXIMUM_NIGHTS: varchar
+        REVIEW_SCORE_RATING: varchar

@@ -1,0 +1,48 @@
+version: 2
+
+models:
+  - name: int_amenities_scd
+    description: >
+      SCD Type-2 representation of the amenities changelog.
+      Each row represents a date range during which a listing's amenity list
+      was stable. Join to the calendar on listing_id and calendar_date BETWEEN
+      valid_from AND valid_to to get the point-in-time amenity snapshot.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - listing_id
+            - valid_from
+    columns:
+      - name: listing_id
+        tests: [not_null]
+      - name: valid_from
+        description: "First date this amenity list was in effect (inclusive)."
+        tests: [not_null]
+      - name: valid_to
+        description: "Last date this amenity list was in effect (inclusive). 9999-12-31 for current version."
+        tests: [not_null]
+      - name: amenities
+        description: "JSON array of amenities in effect during this window."
+
+  - name: int_calendar_enriched
+    description: "Calendar enriched with booking flag and revenue derivation."
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - listing_id
+            - calendar_date
+    columns:
+      - name: listing_id
+        tests: [not_null]
+      - name: calendar_date
+        tests: [not_null]
+      - name: is_booked
+        description: "1 if the date has a reservation, 0 otherwise."
+        tests:
+          - dbt_expectations.expect_column_values_to_be_in_set:
+              value_set: [0, 1]
+      - name: revenue
+        description: "Price on booked dates, 0 on available/blocked dates."
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
