@@ -47,17 +47,20 @@ The project follows a layered dbt architecture:
 
 * Calculated total revenue and % contribution by month
 * Segmented by listings with/without AC
+* (SQL in /analyses/q1_amenity_revenue.sql)
 
 ### 2. Neighborhood Pricing Trends
 
 * Measured average price increase per neighborhood
 * Based on point-in-time comparison
+* (SQL in /analyses/q2_neighborhood_pricing.sql)
 
 ### 3. Longest Possible Stay
 
 * Identified longest consecutive availability windows
 * Applied constraints using `maximum_nights`
 * Used gaps-and-islands technique
+* (SQL in /analyses/q3_long_stay.sql)
 
 ---
 
@@ -72,7 +75,9 @@ The project follows a layered dbt architecture:
 ## 🚀 How to Run
 
 ```bash
+pip install -r requirements.txt
 dbt deps
+dbt seed
 dbt run
 dbt test
 dbt docs generate
@@ -86,6 +91,7 @@ dbt docs generate
 * **SCD Type 2** used to track changing amenities over time
 * **Staging layer** handles data quality issues (nulls, duplicates)
 * **Marts** provide business-focused outputs on top of reusable fact table
+* **Seeds** are used to load CSV data into DuckDB for reproducibility
 
 ---
 
