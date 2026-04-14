@@ -14,3 +14,9 @@ __pycache__/
 
 #OS
 .DS_Store
+
+profiles.yml
+.user.yml
+
+*.log
+.env
